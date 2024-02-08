@@ -9,12 +9,12 @@ Hint - use Date class exposed in JS
 
 function calculateTime(n) {
     const then = performance.now();
-    let i = 0, sum = 0;
+    let i = 1, sum = 0;
     while(i<=n){
-        sum += ++i;
+        sum += i++;
     }
     const diff = performance.now() - then;          //returns in milliseconds
-    console.log(diff/1000);
+    console.log(`Sum from 1-${n} is: ${sum}.\nPerformed in ${diff/1000} seconds.`);
 }
 
-calculateTime(1000000000);
+calculateTime(10000);

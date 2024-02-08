@@ -12,7 +12,24 @@
 */
 
 class Todo {
+  add(todo){
+    
+  }
+  remove(indexOfTodo){
 
+  }
+  update(index, updatedTodo){
+
+  }
+  get(indexOfTodo){
+
+  }
+  getAll(){
+
+  }
+  clear(){
+
+  }
 }
 
 module.exports = Todo;

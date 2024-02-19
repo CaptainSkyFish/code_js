@@ -8,5 +8,16 @@ hello world my name is raman    */
 const fs = require("fs");
 
 fs.readFile("cleanMe.txt", "utf8", (err, data) =>{
-    const cleanString = 
-} )
+    if(err){
+        console.log("error loading:\n");
+        throw(err);
+    }
+    const cleanString = data.replace(/\s+/g, " ");
+    console.log("the cleaned string is:\n"+ cleanString +"\nWriting to file....\n");
+
+    fs.writeFile(
+        "cleanMe.txt", cleanString, "utf8", (err)=>{
+            if(err) throw err;
+            console.log("file written");
+        });
+});

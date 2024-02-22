@@ -15,6 +15,10 @@ class Todo {
   constructor(){
     this.todo_list = [];
   }
+  // class Todo {
+  //   constructor(){
+  //     this.todo_list = [];
+  //   }
   add(todo){
     this.todo_list.push(todo);
     return this.todo_list;

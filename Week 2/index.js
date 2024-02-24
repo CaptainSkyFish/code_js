@@ -1,14 +1,29 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const fs = require('fs');
 const app = express();
 
 app.get("/", (req, res) => {
   res.send("HI THERE! WELCOME.")
 })
 
-app.get("/handleSum", (req, res) => {
-  const limit = req.query.limit;
-  res.send(`the sum is: ${sum(limit)}`);
+app.use(bodyParser.json());
+
+// app.get("/handleSum", (req, res) => {
+app.post("/handleSum", (req, res) => {        //get, post, put, delete----request methods
+  const limit = req.body.limit;               //body
+  // const limit = req.headers.limit;         //headers
+  // const limit = req.query.limit;           //query parameters
+  var answerObj = {
+    sum : sum(limit),
+    mul : Mul(limit)
+  }
+  res.send(answerObj);
 });
+
+app.get("/getPage", (req, res) => {
+  res.sendFile(__dirname + "/index.html");
+})
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
@@ -22,4 +37,13 @@ function sum(counter){
         i++;
     }
     return sum;
+}
+
+function Mul(counter){
+  var i = 1; var mul = 1;
+  while(i <= counter){
+      mul *= i;
+      i++;
+  }
+  return mul;
 }

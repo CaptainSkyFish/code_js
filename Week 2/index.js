@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
 const app = express();
 
 app.get("/", (req, res) => {
@@ -10,8 +9,8 @@ app.get("/", (req, res) => {
 app.use(bodyParser.json());
 
 // app.get("/handleSum", (req, res) => {
-app.post("/handleSum", (req, res) => {        //get, post, put, delete----request methods
-  const limit = req.body.limit;               //body
+app.get("/handleSum", (req, res) => {        //get, post, put, delete----request methods
+  const limit = req.query.limit;               //body
   // const limit = req.headers.limit;         //headers
   // const limit = req.query.limit;           //query parameters
   var answerObj = {

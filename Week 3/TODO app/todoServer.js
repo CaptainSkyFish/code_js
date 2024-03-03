@@ -2,11 +2,11 @@ const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const path = require('path');
-const cors = require('cors');
+// const cors = require('cors');
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors());
+// app.use(cors());
 
 // var todos = [];
 const PORT = process.env.PORT || 3000;
@@ -90,7 +90,7 @@ app.delete("/todos/:id", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "/TODO app/index.html"));
+  res.sendFile(path.join(__dirname, "/index.html"));
 })
 
 app.use((req, res, next) => {
@@ -105,5 +105,3 @@ app.use((req, res, next) => {
     }
     return -1;
   }
-
-// module.exports = app;

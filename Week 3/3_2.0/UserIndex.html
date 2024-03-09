@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Authentication</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #c2c2f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 
+                0 2px 5px rgba(0, 0, 0, 0.2),
+                0 6px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #9797db;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            box-shadow: 
+                0 2px 5px rgba(0, 0, 0, 0.2),
+                inset 0 -2px 1px rgba(255, 255, 255, 0.7),
+                inset 0 2px 2px rgba(0, 0, 0, 0.4);
+                background-image: linear-gradient(to bottom, #9797db 0%, #9797db 100%);
+        }
+
+        p.error {
+            color: #ff0000;
+            margin-top: 10px;
+        }
+
+        a {
+            color: #f7f7f7;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #f7f7f7;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div id="signin-section" style="display: block">
+    <form id="signin-form">
+        <h2>User Authentication</h2>
+        <label for="signin-username">Username:</label>
+        <input type="text" id="signin-username" name="signin-username" required>
+
+        <label for="signin-password">Password:</label>
+        <input type="password" id="signin-password" name="signin-password" required>
+
+        <button type="button" onclick="signIn()">Sign In</button>
+        <br><br>
+        <button type="button">
+            <a href="#" onclick="showSignUp()">Don't have an account? Sign Up</a>
+        </button>
+
+        <p id="errorMessage" class="error"></p>
+    </form>
+    </div>
+
+    <div id="signup-section" style="display: none;">
+        <form id="signup-form">
+        <h2>User Registration</h2>
+        <label for="signup-name">Name:</label>
+        <input type="text" id="signup-name" name="signup-name" required>
+
+        <label for="username">Username:</label>
+        <input type="text" id="signup-username" name="signup-username" required>
+
+        <label for="signup-password">Password:</label>
+        <input type="password" id="signup-password" name="signup-password" required>
+
+        <button type="button" onclick="signUp()">Sign Up</button>
+        <br><br>
+        <button type="button">
+            <a href="#" onclick="showSignIn()">Already have an account? Sign In</a>
+        </button>
+    </form>
+    </div>
+    <script>
+        function signIn() {
+                var username = document.getElementById("signin-username").value;
+                var password = document.getElementById("signin-password").value;
+                fetch("http://localhost:3000/signin", {
+                method: "POST",
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response =>
+                response.json())
+            .then(data =>{
+                if (!data.error) {
+                    const token = data.token;
+                    console.log(token);
+                    localStorage.setItem('authToken', token);
+                    window.location.href = 'http://localhost:3000/welcomeUser';
+                }
+                else{
+                    document.getElementById("errorMessage").innerHTML = data.msg;
+                }
+            })
+        }
+
+            function showSignUp() {
+            document.getElementById('signin-section').style.display = 'none';
+            document.getElementById('signup-section').style.display = 'block';
+            }
+
+            function showSignIn() {
+            document.getElementById('signin-section').style.display = 'block';
+            document.getElementById('signup-section').style.display = 'none';
+            }
+
+            function signUp() {
+                var name = document.getElementById("signup-name").value;
+                var username = document.getElementById("signup-username").value;
+                var password = document.getElementById("signup-password").value;
+                fetch("http://localhost:3000/signup", {
+                method: "POST",
+                body: JSON.stringify({
+                    name: name,
+                    username: username,
+                    password: password
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response =>
+                response.json())
+            .then(data =>{
+                console.log(data);
+            })
+            }
+    </script>
+</body>
+</html>

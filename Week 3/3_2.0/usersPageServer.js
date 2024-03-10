@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const jwtPassword = "somePassKey";
 const path = require('path');
-
+const bcrypt = require('bcrypt');
 mongoose.connect(
   "mongodb+srv://master:HpTf5jtx6NtVYcGd@clusterzero.8k7kmx5.mongodb.net/",
 );
@@ -18,15 +18,19 @@ app.listen(PORT, () => {
 
 const User = mongoose.model("Users", {
   name: String,
-  Username: String,
+  username: String,
   password: String,
 });
 
-function userExists(user, pass) {
-  return User.findOne({
-    username: user,
-    password: pass,
-  });
+async function userExists(username) {
+  try {
+  const data = await User.findOne({ username: username });
+  if(data) return true;
+  else return false
+  } catch (err) {
+  console.error(err);
+  return false; 
+  }
 }
 
 app.get("/", (req, res) => {
@@ -40,8 +44,9 @@ app.get("/", (req, res) => {
 app.post("/signup", async (req, res) => {
   const { name, username, password } = req.body;
 
-  if (await userExists(username, password)) 
-    res.status(400).send("User already exists");
+  if (await userExists(username)){
+    res.status(400).json({msg: "User already exists. Try signing in"});
+  }
   else {
     const user = new User({
       name,
@@ -49,24 +54,36 @@ app.post("/signup", async (req, res) => {
       password,
     });
 
-    await user.save();
-    res.send("User created successfully.");
-  }
+    var token = jwt.sign({ username: username }, jwtPassword);
+    await user.save().then(() =>{
+    res.json({
+      token,
+      msg:"User created successfully."
+    })
+  });
+}
 });
 
 app.post("/signin", async function (req, res) {
   const username = req.body.username;
   const password = req.body.password;
 
-  if (!userExists(username, password)) {
+  if (!userExists(username)) {
     return res.status(403).json({
-      msg: "User doesn't exist in our db",
+      msg: "User doesn't exist in our db. Try signing up.",
     });
   }
-
+  else{
+    const userDetails = await User.findOne({ username, password });
+    if (!userDetails) {
+      return res.status(403).json({
+        msg: "Incorrect password. Please try again.",
+      });
+    }
+  }
   var token = jwt.sign({ username: username }, jwtPassword);
   return res.json({
-    token,
+    token
   });
 });
 
@@ -78,9 +95,7 @@ app.get("/users", async (req, res) => {
     const users = await User.find({
       username: { $ne: username },
     })
-    res.json({
-      users: users,
-    });
+    res.json(users);
   } catch (err) {
     return res.status(403).json({
       msg: "Invalid token",

@@ -45,12 +45,14 @@
                 0 2px 5px rgba(0, 0, 0, 0.2),
                 inset 0 -2px 1px rgba(255, 255, 255, 0.7),
                 inset 0 2px 2px rgba(0, 0, 0, 0.4);
-                background-image: linear-gradient(to bottom, #9797db 0%, #9797db 100%);
+            background-image: linear-gradient(to bottom, #9797db 0%, #9797db 100%);
         }
 
         p.error {
-            color: #ff0000;
+            color: #ca0000;
+            font-weight: bold; /* Added for emphasis */
             margin-top: 10px;
+            position: relative; /* Absolute positioning for left alignment */
         }
 
         a {
@@ -73,14 +75,14 @@
 
         <label for="signin-password">Password:</label>
         <input type="password" id="signin-password" name="signin-password" required>
-
+        <p id="errorMessage" class="error"></p>
         <button type="button" onclick="signIn()">Sign In</button>
         <br><br>
-        <button type="button">
-            <a href="#" onclick="showSignUp()">Don't have an account? Sign Up</a>
+        <button type="button" onclick="showSignUp()">
+            <a href="#">Don't have an account? Sign Up</a>
         </button>
 
-        <p id="errorMessage" class="error"></p>
+        
     </form>
     </div>
 
@@ -98,8 +100,8 @@
 
         <button type="button" onclick="signUp()">Sign Up</button>
         <br><br>
-        <button type="button">
-            <a href="#" onclick="showSignIn()">Already have an account? Sign In</a>
+        <button type="button" onclick="showSignIn()">
+            <a href="#">Already have an account? Sign In</a>
         </button>
     </form>
     </div>
@@ -117,19 +119,28 @@
                     "Content-Type": "application/json"
                 }
             })
-            .then(response =>
-                response.json())
-            .then(data =>{
-                if (!data.error) {
-                    const token = data.token;
-                    console.log(token);
-                    localStorage.setItem('authToken', token);
-                    window.location.href = 'http://localhost:3000/welcomeUser';
-                }
-                else{
-                    document.getElementById("errorMessage").innerHTML = data.msg;
-                }
+            .then(response =>{
+                if (response.status === 403) {
+                return response.json().then(data => {
+                console.error(data.msg);
+                document.getElementById('errorMessage').innerHTML = data.msg;
+                });
+            }   else {
+                return response.json().then(data => {
+                const token = data.token;
+                welcomeUser(token);
+                });
+            }
             })
+            .catch(error => {
+                console.error('Error during fetch:', error);
+                document.getElementById('errorMessage').innerHTML = 'Error during sign-in';
+            });
+    }
+
+        function welcomeUser(token){
+            sessionStorage.setItem('authToken', token);
+            window.location.href = 'http://localhost:3000/welcomeUser';
         }
 
             function showSignUp() {
@@ -157,10 +168,19 @@
                     "Content-Type": "application/json"
                 }
             })
-            .then(response =>
-                response.json())
-            .then(data =>{
-                console.log(data);
+            .then(response =>{
+                if(response.status === 400){
+                    response.json()
+                    .then(data =>{
+                        alert(`error : ${data.msg}`);
+                    })
+                } else {
+                    response.json()
+                    .then(data =>{
+                        alert(`${data.msg} Redirecting to welcomepage.`)
+                        welcomeUser(data.token);
+                    })
+                }
             })
             }
     </script>

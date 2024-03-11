@@ -50,9 +50,9 @@
 
         p.error {
             color: #ca0000;
-            font-weight: bold; /* Added for emphasis */
+            font-weight: bold;
             margin-top: 10px;
-            position: relative; /* Absolute positioning for left alignment */
+            position: relative;
         }
 
         a {
@@ -120,7 +120,7 @@
                 }
             })
             .then(response =>{
-                if (response.status === 403) {
+                if (!response.ok) {
                 return response.json().then(data => {
                 console.error(data.msg);
                 document.getElementById('errorMessage').innerHTML = data.msg;

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>giveSum</title>
+</head>
+<body>
+    <input oninput="debouncePopulateDiv()" id="firstNumber" type="text" placeholder="First number"></input> <br></br>
+        <input oninput="debouncePopulateDiv()" id="secondNumber" type="text" placeholder="Second number"></input> <br></br>
+        <!-- <button onclick="populateDiv()">Calculate sum</button> <br></br> -->
+        <div id="finalSum"></div>
+    <script>
+        function populateDiv() {
+            const a = document.getElementById("firstNumber").value;
+            const b = document.getElementById("secondNumber").value;
+            const element = document.getElementById("finalSum")
+            element.innerHTML = `The Sum is ${parseInt(a) + parseInt(b)}`;
+        }
+
+        let timeout;
+        function debouncePopulateDiv() {
+            clearTimeout(timeout);
+            setTimeout(populateDiv, 200);
+        }
+    </script>
+</body>
+</html>

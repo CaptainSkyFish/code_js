@@ -68,15 +68,16 @@ app.post("/signin", async function (req, res) {
   const username = req.body.username;
   const password = req.body.password;
 
-  if (!userExists(username)) {
+  const userExists =await User.findOne({ username: username });
+  if (!userExists) {
     return res.status(403).json({
-      msg: "User doesn't exist in our db. Try signing up.",
+      msg: `User doesn't exist in our DB. Try signing up.`,
     });
   }
   else{
     const userDetails = await User.findOne({ username, password });
     if (!userDetails) {
-      return res.status(403).json({
+      return res.status(409).json({
         msg: "Incorrect password. Please try again.",
       });
     }

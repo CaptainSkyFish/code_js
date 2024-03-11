@@ -14,6 +14,8 @@
         body {
             font-family:  'Bebas Neue', sans-serif, Arial, sans-serif;
             background-color: #0e0e23;
+            background-size: cover;
+            background-position: center;
             margin: 0;
             padding: 0;
             justify-content: center;
@@ -30,7 +32,7 @@
         .h1-wrapper{
             text-align: left;
             padding-left: 35%;
-            opacity: 0.5;
+            opacity: 0.7;
         }
         #sayHello{
             font-family: "Lobster", sans-serif;
@@ -42,17 +44,17 @@
             color: rgb(123, 123, 169);
         }
         button {
-            background-color:cadetblue;
+            background-color:rgb(148, 173, 196);
             color: #ffffff;
             padding: 10px 20px;
             border-radius: 5px;
-            border-color: rgba(45, 248, 255, 0.629);
+            border-color: rgb(123, 123, 169);
             cursor: pointer;
             font-size: 16px;
             font-weight: bold;
             margin-bottom: 20px;
             position: absolute;
-            top: 10%;
+            top: 5%;
             left: 3.6%;
             box-shadow: 
                 0 2px 5px rgba(0, 0, 0, 0.2),
@@ -60,12 +62,12 @@
                 inset 0 2px 2px rgba(0, 0, 0, 0.4);
         }
         button:hover {
-            opacity: 0.7;
+            opacity: 0.8;
         }
         ul {
             list-style: none;
             position: absolute;
-            top: 20%;
+            top: 15%;
             left: 1%;
             font-size: 180%;
         }
@@ -83,8 +85,13 @@
         </h1>
     </div>
     
-    <button onclick="show()">Show Users</button>
-    <ul id="showUsers">
+    <div id="hideUsers" style="display: none;">
+        <button id="clickMe" onclick="hide()">Hide Users</button>
+    </div>
+    <div id="showUsers" style="display: block;">
+        <button id="clickMe" onclick="show()">Show Users</button>
+    </div>
+    <ul id="userList">
 
     </ul>
     <script>
@@ -101,6 +108,13 @@
             document.getElementById("sayHello").innerHTML = userName;
         })
 
+        function hide(){
+            var parentElement = document.getElementById("userList");
+            parentElement.innerHTML = "";
+            document.getElementById('showUsers').style.display = 'block';
+            document.getElementById('hideUsers').style.display = 'none';
+        }
+
         function show(){
             fetch("http://localhost:3000/users",{
             method: "GET",
@@ -111,7 +125,7 @@
             .then(response =>
                 response.json())
             .then((userListData) => {
-                var parentElement = document.getElementById("showUsers");
+                var parentElement = document.getElementById("userList");
                 parentElement.innerHTML = "";
                 for(i in userListData){
                     var childElement = document.createElement("li");
@@ -120,7 +134,8 @@
                     childElement.appendChild(grandChildElement);
                     parentElement.appendChild(childElement);
                 }
-                parentElement.style.display = "block";
+                document.getElementById('showUsers').style.display = 'none';
+                document.getElementById('hideUsers').style.display = 'block';
             })
     }
     </script>

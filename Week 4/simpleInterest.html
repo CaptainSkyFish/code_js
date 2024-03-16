@@ -16,7 +16,8 @@
         let timeout;
         function debouncePopulateDiv() {
             clearTimeout(timeout);
-            setTimeout(populateDiv, 200);
+            timeout = setTimeout(() => 
+                populateDiv(), 200);
         }
 
         function populateDiv() {
@@ -24,6 +25,7 @@
             const r = document.getElementById("rate").value;
             const t = document.getElementById("time").value;
 
+            if(p && r && t){
             fetch("http://localhost:3000/interest", {
                 method: "POST",
                 body: JSON.stringify({
@@ -42,8 +44,7 @@
                 const amount = document.getElementById("finalAmt");
                 amount.innerHTML = `The interest on ${p} is ${data.total}`;
             })
-            
-        }
+          }}
     </script>
 </body>
 </html>

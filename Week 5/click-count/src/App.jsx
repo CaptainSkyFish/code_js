@@ -4,11 +4,13 @@ import { useState } from "react";
 function App() {
   const [todos, setTodo] = useState([
     {
+      id: 1,
       title: "Todo 1",
       description: "do smthn from 3-7",
       completed: false,
     },
     {
+      id: 2,
       title: "Todo 2",
       description: "do smthn from 3-7",
       completed: false,
@@ -18,7 +20,7 @@ function App() {
     <div>
       {todos.map((todo) => {
         return (
-          <div style={{ background: "black", color: "beige" }}>
+          <div key={todo.id} style={{ background: "black", color: "beige" }}>
             <Todo title={todo.title} description={todo.description} />
           </div>
         );

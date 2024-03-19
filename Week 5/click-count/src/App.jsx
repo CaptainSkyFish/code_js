@@ -16,12 +16,26 @@ function App() {
       completed: false,
     },
   ]);
+
+  function addTodo() {
+    setTodo([
+      ...todos,
+      {
+        id: todos.length + 1,
+        title: "new Todo",
+        description: "This is the new todo",
+        completed: false,
+      },
+    ]);
+  }
+
   return (
-    <div>
+    <div style={{ display: "flex" }}>
       {todos.map((todo) => {
         return (
           <div key={todo.id} style={{ background: "black", color: "beige" }}>
             <Todo title={todo.title} description={todo.description} />
+            <button onClick={addTodo}>Add Todo</button>{" "}
           </div>
         );
       })}

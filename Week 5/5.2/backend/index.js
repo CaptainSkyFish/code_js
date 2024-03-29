@@ -1,12 +1,16 @@
 const express = require("express");
 const path = require("path");
-const bodyparser = require("body-parser");
+const cors = require("cors");
 const app = express();
-const { createTodo, updateTodo } = require("../types");
-const { todo } = require("../Todos DB");
+const { createTodo, updateTodo } = require("./types");
+const { todo } = require("./Todos DB");
 
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 app.use(express.json());
-app.use(bodyparser.json);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

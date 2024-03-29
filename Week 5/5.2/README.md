@@ -5,4 +5,4 @@
 - Sign Up and Sign In
 - Create a Todo
 - Update a Todo
-- Mark todos as checked/finished
+- Mark todos as completed/finished

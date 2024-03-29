@@ -1,14 +1,21 @@
 import { useState } from "react";
 import "./App.css";
 import { CreateTodo } from "./Components/CreateTodo.jsx";
+import { Todos } from "./Components/Todos.jsx";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [todos, setTodos] = useState([]);
+
+  fetch("http://localhost:3000/todos").then(async function (res) {
+    const json = await res.json();
+    setTodos(json.todos);
+  });
 
   return (
     <>
-      <div>
+      <div style={{}}>
         <CreateTodo></CreateTodo>
+        <Todos todos={todos}></Todos>
       </div>
     </>
   );

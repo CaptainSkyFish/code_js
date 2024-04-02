@@ -4,16 +4,16 @@ import "./App.css";
 function App() {
   const [Todos, setTodos] = useState([]);
 
-  // function HandleClick() {
-  //   setTodos([
-  //     ...Todos,
-  //     {
-  //       id: Math.random() * 10000,
-  //       title: "Todo 4",
-  //       description: "desc4",
-  //     },
-  //   ]);
-  // }
+  function handclick() {
+    setTodos([
+      ...Todos,
+      {
+        id: Math.random() * 10000,
+        title: "Todo 4",
+        description: "desc4",
+      },
+    ]);
+  }
   useEffect(() => fetchData(), []);
 
   const fetchData = () => {

@@ -18,38 +18,63 @@
 */
 
 class Calculator {
-  constructor(){
-    result = 0;
+  constructor() {
+    this.result = 0;
   }
 
-  add(number){
-    result += number;
+  add(num) {
+    if (isNaN(num)) {
+      throw new Error("Invalid input. Please provide a valid number.");
+    }
+    this.result += num;
   }
 
-  subtract(number){
-    result -= number;
+  subtract(num) {
+    if (isNaN(num)) {
+      throw new Error("Invalid input. Please provide a valid number.");
+    }
+    this.result -= num;
   }
 
-  multiply(number){
-    result *= number;
+  multiply(num) {
+    if (isNaN(num)) {
+      throw new Error("Invalid input. Please provide a valid number.");
+    }
+    this.result *= num;
   }
 
-  divide(number){
-    result /= number;
+  divide(num) {
+    if (isNaN(num)) {
+      throw new Error("Invalid input. Please provide a valid number.");
+    }
+    if (num === 0) {
+      throw new Error("Cannot divide by zero.");
+    }
+    this.result /= num;
   }
 
-  clear(){
-    result = 0;
+  clear() {
+    this.result = 0;
   }
 
-  getResult(){
-    return result;
+  getResult() {
+    return this.result;
   }
 
-  calculate(expression){
-    expression = expression.replace()
-  }
+  calculate(expression) {
+    const tokens = expression.replace(/\s+/g, "").match(/\d+|[+\-*\/()]/g);
 
+    if (expression.replace(/\s+/g, "").includes("/0")) {
+      throw new Error("Cannot divide by zero.");
+    }
+    if (!tokens || tokens.length === 0) {
+      throw new Error(
+        "Invalid expression. Please provide a valid arithmetic expression."
+      );
+    }
+
+    this.result = eval(expression);
+  }
 }
 
 module.exports = Calculator;

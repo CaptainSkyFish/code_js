@@ -4,7 +4,6 @@ import axios from "axios";
 
 function App() {
   // const [todos, setTodos] = useState([]);
-
   // useEffect(() => {
   //   axios
   //     .get("https://sum-server.100xdevs.com/todos")
@@ -13,9 +12,18 @@ function App() {
   //     });
   // }, []);
 
+  const [selectedId, setSelectedId] = useState(1);
+
   return (
     <div>
-      <RenderTodo todoId={2}></RenderTodo>
+      <button
+        onClick={() =>
+          setSelectedId((selectedId + 1) % 6 == 0 ? 1 : (selectedId + 1) % 6)
+        }
+      >
+        Next
+      </button>
+      <RenderTodo todoId={selectedId}></RenderTodo>
     </div>
   );
 }
@@ -25,11 +33,11 @@ function RenderTodo({ todoId }) {
 
   useEffect(() => {
     axios
-      .get(`https://sum-server.100xdevs.com/todo?id=${todoId}`)
+      .get("https://sum-server.100xdevs.com/todo?id=" + todoId)
       .then((response) => {
         setTodo(response.data.todo);
       });
-  }, []);
+  }, [todoId]);
 
   return (
     <div>

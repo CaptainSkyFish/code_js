@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 // import './App.css'
 import axios from "axios";
 
@@ -13,9 +13,31 @@ function App() {
   // }, []);
 
   const [selectedId, setSelectedId] = useState(1);
+  var [number, setNewNumber] = useState(1);
+  var [count, setCount] = useState(0);
+
+  let summer = useMemo(() => {
+    let sum = 0;
+    while (number > 0) {
+      sum += number--;
+    }
+    return sum;
+  }, [number]);
 
   return (
     <div>
+      <input
+        type="text"
+        onChange={(e) => {
+          setNewNumber(e.target.value);
+        }}
+        placeholder="sum from 1 to n"
+      />
+      <p>Sum is {summer}</p>
+      <button onClick={() => setCount(++count)}>counter({count})</button>
+      <br />
+      <br />
+      <br />
       <button
         onClick={() =>
           setSelectedId((selectedId + 1) % 6 == 0 ? 1 : (selectedId + 1) % 6)
@@ -33,7 +55,7 @@ function RenderTodo({ todoId }) {
 
   useEffect(() => {
     axios
-      .get("https://sum-server.100xdevs.com/todo?id=" + todoId)
+      .get(`https://sum-server.100xdevs.com/todo?id=${todoId}`)
       .then((response) => {
         setTodo(response.data.todo);
       });

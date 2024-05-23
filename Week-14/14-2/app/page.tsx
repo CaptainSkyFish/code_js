@@ -1,3 +1,4 @@
+import client from "@/db";
 import axios from "axios";
 
 // async function fetchUserDetails() {
@@ -5,6 +6,14 @@ import axios from "axios";
 //   const response = await axios.get("http://localhost:3000/api/users")
 //   return response.data;
 // }
+
+async function fetchUserDetails() {
+  const user = await client.user.findFirst();
+  return ({
+    email: user?.username,
+    name: user?.password
+  })
+}
 
 export default async function Home() {
   // const userDetails = await fetchUserDetails();

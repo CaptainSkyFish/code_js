@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO</title>
+</head>
+<body>
+    Todo title:
+    <input type="text" id="title"></input>
+    <br></br>
+    Todo description:
+    <input type="text" id="description"></input>
+    <br></br>
+    <button onclick="onPress()">save todo</button>
+    <ul id="mainArea">
+        
+    </ul>
+</body>
+<script>
+    function getTodos(){
+        fetch("http://localhost:3000/todos", {
+            method: "GET",
+        })
+        .then(response => 
+            response.json())
+        .then(data =>{
+            console.log(data);
+            var parentElement = document.getElementById("mainArea");
+            // parentElement.innerHTML = JSON.stringify(data);
+            for(i in data){
+                var childElement = document.createElement("li");
+                childElement.id = "li-" + data[i].id;
+                
+                var grandChildElement1 = document.createElement("span");
+                grandChildElement1.innerHTML = data[i].title;
+                var grandChildElement2 = document.createElement("span");
+                grandChildElement2.innerHTML = data[i].description;
+                var grandChildElement3 = document.createElement("button");
+                grandChildElement3.innerHTML = "Remove";
+                grandChildElement3.setAttribute("onclick", "removeTodo("+ data[i].id + ")");
+
+                childElement.append(grandChildElement1, grandChildElement2, grandChildElement3);
+                // childElement.appendChild(grandChildElement2);
+                // childElement.appendChild(grandChildElement3);
+
+                parentElement.appendChild(childElement);
+            }
+        });
+        }
+
+    function removeTodo(id){
+        fetch("http://localhost:3000/todos/" + id, {
+            method: "DELETE",
+        })
+        .then(() => {
+            console.log("todo removed.");
+            var parentElement = document.getElementById("mainArea");
+            parentElement.removeChild(document.getElementById("li-"+id));
+        });
+    }
+    
+    getTodos();
+    
+    function onPress(){
+        var title = document.getElementById("title").value;
+        var description = document.getElementById("description").value;
+        fetch("http://localhost:3000/todos", {
+            method: "POST",
+            body: JSON.stringify({
+                title: title,
+                description: description
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => 
+            response.json())
+        .then(data =>{
+            console.log(data);
+            var parentElement = document.getElementById("mainArea");
+            var childElement = Object.assign(document.createElement("li"), { id: "li-" + data.id });
+
+            var grandChildElement1 = document.createElement("span");
+            grandChildElement1.innerHTML = data.title;
+            var grandChildElement2 = document.createElement("span");
+            grandChildElement2.innerHTML = data.description;
+            var grandChildElement3 = document.createElement("button");
+            grandChildElement3.innerHTML = "Remove";
+            grandChildElement3.setAttribute("onclick", "removeTodo("+ data.id + ")");
+
+            childElement.append(grandChildElement1, grandChildElement2, grandChildElement3);
+            parentElement.appendChild(childElement);
+        })
+    };
+</script>
+</html>

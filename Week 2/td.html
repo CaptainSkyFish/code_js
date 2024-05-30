@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo App</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .todo-container {
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .todo-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .todo-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .todo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .todo-item input[type="checkbox"] {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #4caf50;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .todo-item input[type="checkbox"]:checked {
+      background-color: #4caf50;
+      border: 2px solid #4caf50;
+    }
+
+    .todo-item label {
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .todo-item button {
+      background-color: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .add-todo {
+      display: flex;
+      margin-top: 20px;
+    }
+
+    .add-todo input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .add-todo textarea {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+
+    .add-todo button {
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="todo-container">
+    <div class="todo-header">
+      <h2>Todo App</h2>
+    </div>
+
+    <ul class="todo-list" id="todoList">
+      <!-- Todo items will go here -->
+    </ul>
+
+    <div class="add-todo">
+      <input type="text" id="newTodo" placeholder="Add a new todo" style = "width: 40%;">
+      <textarea id="newDescription" placeholder="Add description"></textarea>
+      <button onclick="addTodo()">Add</button>
+    </div>
+  </div>
+
+  <script>
+    function addTodo() {
+      const newTodoInput = document.getElementById('newTodo');
+      const newDescriptionInput = document.getElementById('newDescription');
+      const todoList = document.getElementById('todoList');
+
+      if (newTodoInput.value.trim() !== '') {
+        const newTodoItem = document.createElement('li');
+        newTodoItem.className = 'todo-item';
+        newTodoItem.innerHTML = `
+          <input type="checkbox">
+          <label>
+            <span>${newTodoInput.value}</span>
+            <br>
+            ${newDescriptionInput.value}
+          </label>
+          <button onclick="removeTodo(this)">Remove</button>
+        `;
+
+        todoList.appendChild(newTodoItem);
+        newTodoInput.value = '';
+        newDescriptionInput.value = '';
+      }
+    }
+
+    function removeTodo(button) {
+      const todoItem = button.parentElement;
+      todoItem.remove();
+    }
+  </script>
+
+</body>
+</html>

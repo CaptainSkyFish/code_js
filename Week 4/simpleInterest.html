@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>simple interest</title>
+</head>
+<body>
+        <input oninput="debouncePopulateDiv()" id="principal" type="text" placeholder="Principal"></input> <br></br>
+        <input oninput="debouncePopulateDiv()" id="rate" type="text" placeholder="Rate"></input> <br></br>
+        <input oninput="debouncePopulateDiv()" id="time" type="text" placeholder="Time"></input> <br></br>
+        <!-- <button onclick="populateDiv()">Calculate sum</button> <br></br> -->
+        <div id="interest"></div>
+        <div id="finalAmt"></div>
+    <script>
+        let timeout;
+        function debouncePopulateDiv() {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => 
+                populateDiv(), 200);
+        }
+
+        function populateDiv() {
+            const p = document.getElementById("principal").value;
+            const r = document.getElementById("rate").value;
+            const t = document.getElementById("time").value;
+
+            if(p && r && t){
+            fetch("http://localhost:3000/interest", {
+                method: "POST",
+                body: JSON.stringify({
+                    principal: p,
+                    rate: r,
+                    time: t
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+            }
+            })
+            .then(response => response.json())
+            .then((data) => {
+                const interest = document.getElementById("interest");
+                interest.innerHTML = `The interest on ${p} is ${data.interest}`;
+                const amount = document.getElementById("finalAmt");
+                amount.innerHTML = `The interest on ${p} is ${data.total}`;
+            })
+          }}
+    </script>
+</body>
+</html>

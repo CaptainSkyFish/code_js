@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+mongoose.connect("mongodb://localhost:27017/mock-pay");
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -23,21 +24,23 @@ const userSchema = new mongoose.Schema({
   },
   lastName: {
     type: String,
-    required: true,
+    required: false,
     trim: true,
     maxLength: 50,
   },
 });
 
-userSchema.methods.createHash = async function (plainTextPassword) {
+userSchema.statics.createHash = async function (plainTextPassword) {
   const saltRounds = 8;
-  const salt = bcrypt.genSalt(saltRounds);
+  const salt = await bcrypt.genSalt(saltRounds);
   return bcrypt.hash(plainTextPassword, salt);
 };
 
 userSchema.methods.validatePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password_hash);
 };
+
+export const User = mongoose.model("User", userSchema);
 
 const accountSchema = new mongoose.Schema({
   userId: {
@@ -51,5 +54,4 @@ const accountSchema = new mongoose.Schema({
   },
 });
 
-export const User = mongoose.model("User", userSchema);
 export const Account = mongoose.model("Account", accountSchema);

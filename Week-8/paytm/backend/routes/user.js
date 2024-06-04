@@ -1,17 +1,24 @@
 import express from "express";
-import { Account, User } from "../db";
-import { JWT_SECRET } from "../config";
-import { z } from "zod";
-import { authMiddleware } from "../authMiddleware";
+import { Account, User } from "../db.js";
+import { JWT_SECRET } from "../config.js";
+import zod from "zod";
+import jwt from "jsonwebtoken";
+import { authMiddleware } from "../authMiddleware.js";
 
 const router = express.Router();
 
-const signupBody = z.object({
-  username: z.string().email,
-  firstName: z.string(),
-  lastName: z.string().optional(),
-  password: z.string().min(8),
-  confirmPassword: z.string().min(8),
+router.get("/", (req, res) => {
+  return res.json({
+    msg: "Hello there from user1",
+  });
+});
+
+const signupBody = zod.object({
+  username: zod.string().email(),
+  firstName: zod.string(),
+  lastName: zod.string().optional(),
+  password: zod.string().min(8),
+  confirmPassword: zod.string().min(8),
 });
 
 const existingUser = async (user_name) => {
@@ -19,7 +26,7 @@ const existingUser = async (user_name) => {
 };
 
 router.post("/signup", async (req, res) => {
-  if (existingUser(req.body.username)._id) {
+  if (await existingUser(req.body.username)._id) {
     //check existing user
     return res.status(411).json({
       message: "Username already exists. Redirecting to Signin page in ....",
@@ -32,20 +39,20 @@ router.post("/signup", async (req, res) => {
       message: "Invalid Credentials. Please try again.",
     });
   }
-  const newUser = await User.create({
+  const newUser = new User({
     //creating new user in db
     username: req.body.username,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
   });
-  const userId = newUser._id;
-  const token = jwt.sign({ userId }, JWT_SECRET); //generate session token
-  newUser.password_hash = await newUser.createHash(req.body.password); //hash password
+  newUser.password_hash = await User.createHash(req.body.password); //hash password
 
   //store user in db
   await newUser.save();
+  const userId = newUser._id;
+  const token = jwt.sign({ userId }, JWT_SECRET); //generate session token
 
-  const newAccount = await Account.create({
+  await Account.create({
     userId,
     balance: 1 + Math.random() * 10000,
   });
@@ -56,9 +63,9 @@ router.post("/signup", async (req, res) => {
   });
 });
 
-const signinbody = z.object({
-  username: z.string().email(),
-  password: z.string().min(8),
+const signinbody = zod.object({
+  username: zod.string().email(),
+  password: zod.string().min(8),
 });
 
 router.post("/signin", async (req, res) => {
@@ -70,7 +77,7 @@ router.post("/signin", async (req, res) => {
   }
 
   const { username, password } = req.body; //Validate Existing User
-  const user = existingUser(username);
+  const user = await existingUser(username);
   if (!user) {
     return res
       .status(411)
@@ -99,12 +106,12 @@ router.post("/signin", async (req, res) => {
   });
 });
 
-const updateBody = z
+const updateBody = zod
   .object({
-    password: z.string().optional(),
-    confirmPassword: z.string().optional(),
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
+    password: zod.string().optional(),
+    confirmPassword: zod.string().optional(),
+    firstName: zod.string().optional(),
+    lastName: zod.string().optional(),
   })
   .refine(
     (values) => {

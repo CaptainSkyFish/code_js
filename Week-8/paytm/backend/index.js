@@ -11,5 +11,7 @@ app.use(cors());
 
 app.listen(PORT, (err) => {
   if (err) console.log("!Error in server setup!");
-  console.log(`Server listening on PORT: ${PORT}`);
+  console.log(
+    `Server listening on PORT: ${PORT} \n Visit on http://localhost:4000/`
+  );
 });

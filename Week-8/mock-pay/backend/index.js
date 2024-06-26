@@ -2,16 +2,15 @@ import express from "express";
 import mainRouter from "./routes/index.js";
 import cors from "cors";
 const app = express();
-const PORT = 4000;
-
-app.use(express.json());
-app.use("/api/v1", mainRouter);
+const PORT = 3000;
 
 app.use(cors());
+app.use(express.json());
+app.use("/api/v1", mainRouter);
 
 app.listen(PORT, (err) => {
   if (err) console.log("!Error in server setup!");
   console.log(
-    `Server listening on PORT: ${PORT} \n Visit on http://localhost:4000/`
+    `Server listening on PORT: ${PORT} \nVisit http://localhost:${PORT}/`
   );
 });

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-mongoose.connect("mongodb://localhost:27017/mock-pay");
+mongoose.connect("mongodb://127.0.0.1:27017/mock-pay");
 
 const userSchema = new mongoose.Schema({
   username: {

@@ -10,7 +10,5 @@ app.use("/api/v1", mainRouter);
 
 app.listen(PORT, (err) => {
   if (err) console.log("!Error in server setup!");
-  console.log(
-    `Server listening on PORT: ${PORT} \nVisit http://localhost:${PORT}/`
-  );
+  console.log(`Visit http://localhost:${PORT}/`);
 });

@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-mongoose.connect("mongodb://127.0.0.1:27017/mock-pay");
+mongoose
+  .connect("mongodb://127.0.0.1:27017/mock-pay")
+  .then(console.log(`connection to mongoDB established.`));
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -51,6 +53,11 @@ const accountSchema = new mongoose.Schema({
   balance: {
     type: Number,
     required: true,
+    min: 0,
+    validate: {
+      validator: Number.isInteger,
+      message: `value is not an Integer`,
+    },
   },
 });
 

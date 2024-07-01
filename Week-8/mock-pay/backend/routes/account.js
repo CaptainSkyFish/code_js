@@ -11,7 +11,7 @@ router.get("/balance", authMiddleware, async (req, res) => {
     });
 
     res.status(200).json({
-      balance: account.balance,
+      balance: account.balance / 100,
     });
   } catch (error) {
     console.error("Error fetching account:", error);
